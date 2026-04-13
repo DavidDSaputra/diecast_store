@@ -16,7 +16,7 @@ enum AuthStatus {
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  late final GoogleSignIn _googleSignIn;
   final AuthRepositoryImpl _repository = AuthRepositoryImpl();
 
   AuthStatus _status = AuthStatus.initial;
@@ -31,6 +31,34 @@ class AuthProvider extends ChangeNotifier {
   String? get backendToken => _backendToken;
   String? get errorMessage => _errorMessage;
   bool get isLoading => _status == AuthStatus.loading;
+
+  AuthProvider() {
+    _googleSignIn = GoogleSignIn();
+  }
+
+  Future<void> initialize() async {
+    final token = await SecureStorageService.getToken();
+    final currentUser = _auth.currentUser;
+
+    if (currentUser != null) {
+      await currentUser.reload();
+      _firebaseUser = _auth.currentUser;
+    }
+
+    if (token != null && _firebaseUser?.emailVerified == true) {
+      _backendToken = token;
+      _status = AuthStatus.authenticated;
+    } else if (_firebaseUser != null && !(_firebaseUser?.emailVerified ?? true)) {
+      _status = AuthStatus.emailNotVerified;
+    } else if (token != null) {
+      _backendToken = token;
+      _status = AuthStatus.authenticated;
+    } else {
+      _status = AuthStatus.unauthenticated;
+    }
+
+    notifyListeners();
+  }
 
   Future<bool> register({
     required String name,
@@ -145,7 +173,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> _verifyTokenToBackend() async {
-    final firebaseToken = await _firebaseUser?.getIdToken();
+    final firebaseToken = await _firebaseUser?.getIdToken(true);
     if (firebaseToken == null) {
       _setError('Gagal mengambil token Firebase');
       return false;
@@ -159,10 +187,20 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } on Exception catch (e) {
+      // Fallback: jika backend error tapi email sudah verified, proceed ke dashboard
+      if (_firebaseUser?.emailVerified ?? false) {
+        debugPrint('[WARNING] Backend token verification failed: $e. Proceeding with Firebase user.');
+        _status = AuthStatus.authenticated;
+        // Simpan Firebase UID sementara sebagai fallback token
+        await SecureStorageService.saveToken(_firebaseUser?.uid ?? 'fallback_token');
+        notifyListeners();
+        return true;
+      }
       _setError('Verifikasi token gagal: $e');
       return false;
     }
   }
+
 
   Future<void> logout() async {
     await _auth.signOut();
