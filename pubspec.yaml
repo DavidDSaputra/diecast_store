@@ -1,0 +1,28 @@
+name: diecast_store
+description: A Flutter diecast store app with Firebase auth and backend token validation.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5
+  firebase_core: ^4.6.0
+  firebase_auth: ^6.3.0
+  google_sign_in: ^6.2.2
+  dio: ^5.9.2
+  flutter_secure_storage: ^10.0.0
+  email_validator: ^3.0.0
+  equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
