@@ -20,9 +20,9 @@ class GoogleSignInButton extends StatelessWidget {
         ),
         child: isLoading
             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-            : Row(
+            : const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.g_mobiledata, size: 22, color: Colors.black87),
                   SizedBox(width: 12),
                   Text(

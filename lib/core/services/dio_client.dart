@@ -14,8 +14,8 @@ class DioClient {
   static Dio _createDio() {
     final dio = Dio(BaseOptions(
       baseUrl: ApiConstants.baseUrl,
-      connectTimeout: Duration(milliseconds: ApiConstants.connectTimeout),
-      receiveTimeout: Duration(milliseconds: ApiConstants.receiveTimeout),
+      connectTimeout: const Duration(milliseconds: ApiConstants.connectTimeout),
+      receiveTimeout: const Duration(milliseconds: ApiConstants.receiveTimeout),
       headers: {'Content-Type': 'application/json'},
     ));
 

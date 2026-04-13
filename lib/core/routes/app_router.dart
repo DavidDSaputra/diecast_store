@@ -7,6 +7,8 @@ import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import 'auth_guard.dart';
 
 class AppRouter {
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
