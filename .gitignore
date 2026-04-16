@@ -8,3 +8,10 @@
 build/
 .idea/
 *.iml
+
+# Credentials & Secrets
+*firebase*adminsdk*.json
+client_secret*.json
+*.pem
+.env
+.env.local
