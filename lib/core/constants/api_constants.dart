@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'https://YOUR_BACKEND_URL/v1';
+  static const String baseUrl = 'http://127.0.0.1:8000/v1';
   static const String verifyToken = '/auth/verify-token';
   static const String products = '/products';
   static const int connectTimeout = 15000;
