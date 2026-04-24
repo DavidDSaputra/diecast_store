@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'core/providers/theme_provider.dart';
 import 'core/routes/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/providers/auth_provider.dart';
@@ -14,7 +15,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const DiecastStoreApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+      ],
+      child: const DiecastStoreApp(),
+    ),
+  );
 }
 
 class DiecastStoreApp extends StatelessWidget {
@@ -22,19 +32,17 @@ class DiecastStoreApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ProductProvider()),
-      ],
-      child: MaterialApp(
-        navigatorKey: AppRouter.navigatorKey,
-        title: 'Diecast Store',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        initialRoute: AppRouter.splash,
-        routes: AppRouter.routes,
-      ),
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return MaterialApp(
+      navigatorKey: AppRouter.navigatorKey,
+      title: 'Diecast Store',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeProvider.themeMode,
+      initialRoute: AppRouter.splash,
+      routes: AppRouter.routes,
     );
   }
 }
