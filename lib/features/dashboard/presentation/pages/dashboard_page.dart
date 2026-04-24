@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/providers/theme_provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../presentation/providers/product_provider.dart';
 import '../../data/models/product_model.dart';
@@ -28,7 +29,8 @@ class _DashboardPageState extends State<DashboardPage> {
   List<ProductModel> _filteredProducts(List<ProductModel> products) {
     final query = _searchCtrl.text.toLowerCase();
     return products.where((p) {
-      final matchCategory = _selectedCategory == 'All' || p.category.toLowerCase() == _selectedCategory.toLowerCase();
+      final matchCategory = _selectedCategory == 'All' ||
+          p.category.toLowerCase() == _selectedCategory.toLowerCase();
       final matchSearch = query.isEmpty ||
           p.name.toLowerCase().contains(query) ||
           p.category.toLowerCase().contains(query);
@@ -68,7 +70,8 @@ class _DashboardPageState extends State<DashboardPage> {
             const Text('Dashboard', style: TextStyle(fontSize: 18)),
             Text(
               'Halo, ${auth.firebaseUser?.displayName ?? 'Collector'}!',
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
+              style:
+                  const TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
             ),
           ],
         ),
@@ -93,7 +96,8 @@ class _DashboardPageState extends State<DashboardPage> {
               decoration: InputDecoration(
                 hintText: 'Cari diecast, kategori, atau merek',
                 prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onChanged: (_) => setState(() {}),
             ),
@@ -104,15 +108,23 @@ class _DashboardPageState extends State<DashboardPage> {
                 scrollDirection: Axis.horizontal,
                 children: ['All', 'Hot Wheels', 'Mini GT', 'Premium', 'Classic']
                     .map((category) => GestureDetector(
-                          onTap: () => setState(() => _selectedCategory = category),
+                          onTap: () =>
+                              setState(() => _selectedCategory = category),
                           child: Container(
                             margin: const EdgeInsets.only(right: 10),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
                             decoration: BoxDecoration(
-                              color: _selectedCategory == category ? Colors.red.shade100 : Colors.grey.shade200,
+                              color: _selectedCategory == category
+                                  ? Colors.red.shade100
+                                  : Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Text(category, style: TextStyle(color: _selectedCategory == category ? Colors.red.shade800 : Colors.black87)),
+                            child: Text(category,
+                                style: TextStyle(
+                                    color: _selectedCategory == category
+                                        ? Colors.red.shade800
+                                        : Colors.black87)),
                           ),
                         ))
                     .toList(),
@@ -135,7 +147,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        const Icon(Icons.error_outline,
+                            size: 64, color: Colors.red),
                         const SizedBox(height: 16),
                         Text(product.error ?? 'Terjadi kesalahan'),
                         const SizedBox(height: 16),
@@ -151,7 +164,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     onRefresh: () => product.fetchProducts(),
                     child: GridView.builder(
                       itemCount: filtered.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.72,
                         crossAxisSpacing: 12,
@@ -161,12 +175,14 @@ class _DashboardPageState extends State<DashboardPage> {
                         final p = filtered[index];
                         return Card(
                           elevation: 2,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(12)),
                                 child: p.imageUrl.isNotEmpty
                                     ? Image.network(
                                         p.imageUrl,
@@ -176,13 +192,18 @@ class _DashboardPageState extends State<DashboardPage> {
                                         errorBuilder: (_, __, ___) => Container(
                                           height: 120,
                                           color: Colors.grey.shade200,
-                                          child: const Icon(Icons.image_not_supported, size: 40),
+                                          child: const Icon(
+                                              Icons.image_not_supported,
+                                              size: 40),
                                         ),
                                       )
                                     : Container(
                                         height: 120,
                                         color: Colors.grey.shade200,
-                                        child: const Center(child: Icon(Icons.image_not_supported, size: 40)),
+                                        child: const Center(
+                                            child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 40)),
                                       ),
                               ),
                               Padding(
@@ -192,25 +213,32 @@ class _DashboardPageState extends State<DashboardPage> {
                                   children: [
                                     Text(
                                       p.name,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       _formatPrice(p.price),
-                                      style: const TextStyle(color: Color(0xFFB71C1C), fontWeight: FontWeight.w600),
+                                      style: const TextStyle(
+                                          color: Color(0xFFB71C1C),
+                                          fontWeight: FontWeight.w600),
                                     ),
                                     const SizedBox(height: 4),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
                                         color: Colors.red.shade50,
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
                                         p.category,
-                                        style: const TextStyle(fontSize: 11, color: Color(0xFFB71C1C)),
+                                        style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Color(0xFFB71C1C)),
                                       ),
                                     ),
                                   ],
@@ -227,6 +255,75 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) async {
+          if (index == 1) {
+            await showDialog<void>(
+              context: context,
+              builder: (_) => const _AccountDialog(),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            activeIcon: Icon(Icons.account_circle),
+            label: 'Account',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AccountDialog extends StatelessWidget {
+  const _AccountDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final isDark = themeProvider.isDark;
+
+    return AlertDialog(
+      title: const Text('Pengaturan Akun'),
+      content: SizedBox(
+        width: 320,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  isDark ? Icons.dark_mode : Icons.light_mode,
+                  size: 20,
+                  color: isDark ? Colors.amber : Colors.grey.shade600,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  isDark ? 'Mode Gelap' : 'Mode Terang',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+            Switch(
+              value: isDark,
+              onChanged: (_) => context.read<ThemeProvider>().toggle(),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Tutup'),
+        ),
+      ],
     );
   }
 }
