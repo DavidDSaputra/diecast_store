@@ -187,16 +187,7 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } on Exception catch (e) {
-      // Fallback: jika backend error tapi email sudah verified, proceed ke dashboard
-      if (_firebaseUser?.emailVerified ?? false) {
-        debugPrint('[WARNING] Backend token verification failed: $e. Proceeding with Firebase user.');
-        _status = AuthStatus.authenticated;
-        // Simpan Firebase UID sementara sebagai fallback token
-        await SecureStorageService.saveToken(_firebaseUser?.uid ?? 'fallback_token');
-        notifyListeners();
-        return true;
-      }
-      _setError('Verifikasi token gagal: $e');
+      _setError('Verifikasi token ke backend gagal. Pastikan server backend jalan dan file Firebase Admin SDK cocok.');
       return false;
     }
   }

@@ -22,8 +22,12 @@ class DioClient {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         debugPrint('[REQUEST] ${options.method} ${options.path}');
+        if (options.data != null) {
+          debugPrint('[BODY] ${options.data}');
+        }
         final token = await SecureStorageService.getToken();
         if (token != null) {
+          debugPrint('\n\n==== TOKEN ====\n$token\n==== TOKEN ====\n\n');
           options.headers['Authorization'] = 'Bearer $token';
         }
         handler.next(options);
